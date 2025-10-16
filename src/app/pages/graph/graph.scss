@@ -1,0 +1,31 @@
+body,
+html,
+#wrap {
+  height: 100%;
+  margin: 0;
+  background: #0b1220;
+  color: #e5e7eb;
+  font-family: system-ui;
+}
+#wrap {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+}
+#panel {
+  background: #0f172a;
+  border-left: 1px solid #1f2937;
+  padding: 14px;
+  overflow: auto;
+}
+#panel h2 {
+  margin: 6px 0 4px;
+}
+.tag {
+  display: inline-block;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin: 2px;
+  font-size: 12px;
+}
