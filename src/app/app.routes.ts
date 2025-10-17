@@ -8,6 +8,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: '',
+    loadComponent: () => import('./pages/graph/graph').then(m => m.Graph),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'auth',
     children: [
       {
