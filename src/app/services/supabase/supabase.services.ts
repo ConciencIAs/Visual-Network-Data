@@ -141,7 +141,7 @@ export class SupabaseService {
   }
 
   getListRegisterUsers()  {
-    return this.supabase.from('Leonidas').select('*').limit(20)
+    return this.supabase.from('Leonidas').select('*')
   }
 
   saveRegisterMessages(messages: RegisterMessages) {
