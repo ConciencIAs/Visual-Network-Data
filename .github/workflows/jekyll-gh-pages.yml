@@ -43,7 +43,7 @@ jobs:
       # Asegúrate de que el comando de build sea correcto para tu proyecto.
       # Usamos --base-href para que las rutas funcionen correctamente en GitHub Pages.
       - name: Build Angular Application
-        run: npx ng build --configuration production --base-href /${{ github.event.repository.name }}/
+        run: npx ng build --configuration production --base-href /${{ github.event.repository.name }}/ --optimization=true --styles-inline-critical=false
         # Si usas un dominio personalizado, el --base-href debe ser simplemente /
         # run: npx ng build --configuration production --base-href /
 
