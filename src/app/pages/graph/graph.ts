@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { SupabaseService } from '@app/services/supabase/supabase.services';
 
 interface Node {
   id: string;
@@ -26,8 +27,11 @@ interface GraphData {
 })
 export class Graph implements OnInit {
 
-  // graph obtener este elemento del doom #graph
   @ViewChild('graph', { static: true }) graphContainer!: ElementRef;
+
+  constructor(
+    private supabaseService: SupabaseService
+  ) {}
 
 
   initializeGraph(container: HTMLElement, data: GraphData, ForceGraphCtor: any) {
@@ -48,8 +52,10 @@ export class Graph implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (typeof window === 'undefined') return;
+    const { data, error } = await this.supabaseService.getListRegisterUsers()
+    console.log({data, error})
 
     import('3d-force-graph').then((mod) => {
       const ForceGraph3D = mod?.default ?? mod;
@@ -69,5 +75,9 @@ export class Graph implements OnInit {
       ]
     }, ForceGraph3D);
     }).catch(err => console.error('No se pudo cargar 3d-force-graph:', err));
+  }
+
+  clusterBY(type: string) {
+
   }
 }

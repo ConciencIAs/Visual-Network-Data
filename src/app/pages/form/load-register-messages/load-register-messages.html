@@ -1,0 +1,210 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white shadow-xl rounded-lg p-6 space-y-8">
+      <!-- Encabezado -->
+      <div class="text-center">
+        <h2 class="text-3xl font-bold text-gray-900">Registro de Mensajes</h2>
+        <p class="mt-2 text-sm text-gray-600">Por favor completa todos los campos requeridos</p>
+      </div>
+
+      <!-- Formulario -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Nombre Completo -->
+        <div>
+          <label for="full_name" class="block text-sm font-medium text-gray-700">
+            Nombre Completo
+          </label>
+          <input
+            type="text"
+            id="full_name"
+            formControlName="full_name"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="Ingresa tu nombre completo"
+          />
+          @if (registerForm.get('full_name')?.errors?.['required'] && registerForm.get('full_name')?.touched) {
+            <p class="mt-1 text-sm text-red-600">
+              El nombre es requerido
+            </p>
+          }
+        </div>
+
+        <!-- Edad y Género en la misma línea -->
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <label for="age" class="block text-sm font-medium text-gray-700">
+              Edad
+            </label>
+            <input
+              type="number"
+              id="age"
+              formControlName="age"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              placeholder="Edad"
+            />
+            @if (registerForm.get('age')?.errors?.['required'] && registerForm.get('age')?.touched) {
+              <p class="mt-1 text-sm text-red-600">
+                La edad es requerida
+              </p>
+            }
+          </div>
+          <div>
+            <label for="gender" class="block text-sm font-medium text-gray-700">
+              Género
+            </label>
+            <select
+              id="gender"
+              formControlName="gender"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            >
+              <option value="">Selecciona un género</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="O">Otro</option>
+            </select>
+            @if (registerForm.get('gender')?.errors?.['required'] && registerForm.get('gender')?.touched) {
+              <p class="mt-1 text-sm text-red-600">
+                El género es requerido
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- País, Ciudad y Departamento -->
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div>
+            <label for="country" class="block text-sm font-medium text-gray-700">
+              País
+            </label>
+            <input
+              type="text"
+              id="country"
+              formControlName="country"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              placeholder="País"
+            />
+            @if (registerForm.get('country')?.errors?.['required'] && registerForm.get('country')?.touched) {
+              <p class="mt-1 text-sm text-red-600">
+                El país es requerido
+              </p>
+            }
+          </div>
+          <div>
+            <label for="city" class="block text-sm font-medium text-gray-700">
+              Ciudad
+            </label>
+            <input
+              type="text"
+              id="city"
+              formControlName="city"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              placeholder="Ciudad"
+            />
+            @if (registerForm.get('city')?.errors?.['required'] && registerForm.get('city')?.touched) {
+              <p class="mt-1 text-sm text-red-600">
+                La ciudad es requerida
+              </p>
+            }
+          </div>
+          <div>
+            <label for="department" class="block text-sm font-medium text-gray-700">
+              Departamento
+            </label>
+            <input
+              type="text"
+              id="department"
+              formControlName="department"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              placeholder="Departamento"
+            />
+            @if (registerForm.get('department')?.errors?.['required'] && registerForm.get('department')?.touched) {
+              <p class="mt-1 text-sm text-red-600">
+                El departamento es requerido
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700">
+            Teléfono
+          </label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <input
+              type="tel"
+              id="phone"
+              formControlName="phone"
+              class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 px-4 py-3"
+              placeholder="Ingresa tu número telefónico"
+            />
+          </div>
+          @if (registerForm.get('phone')?.errors?.['required'] && registerForm.get('phone')?.touched) {
+            <p class="mt-1 text-sm text-red-600">
+              El teléfono es requerido
+            </p>
+          }
+          @if (registerForm.get('phone')?.errors?.['pattern'] && registerForm.get('phone')?.touched) {
+            <p class="mt-1 text-sm text-red-600">
+              Ingresa un número de teléfono válido (mínimo 9 dígitos)
+            </p>
+          }
+        </div>
+
+        <!-- Mensaje -->
+        <div>
+          <label for="message" class="block text-sm font-medium text-gray-700">
+            Mensaje
+          </label>
+          <div class="mt-1">
+            <textarea
+              id="message"
+              formControlName="message"
+              rows="4"
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-3 resize-y"
+              placeholder="Escribe tu mensaje aquí..."
+            ></textarea>
+          </div>
+          @if (registerForm.get('message')?.errors?.['required'] && registerForm.get('message')?.touched) {
+            <p class="mt-1 text-sm text-red-600">
+              El mensaje es requerido
+            </p>
+          }
+          @if (registerForm.get('message')?.errors?.['minlength'] && registerForm.get('message')?.touched) {
+            <p class="mt-1 text-sm text-red-600">
+              El mensaje debe tener al menos 10 caracteres
+            </p>
+          }
+          @if (registerForm.get('message')?.errors?.['maxlength'] && registerForm.get('message')?.touched) {
+            <p class="mt-1 text-sm text-red-600">
+              El mensaje no puede exceder los 500 caracteres
+            </p>
+          }
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="flex justify-end space-x-3 pt-4">
+          <button
+            type="button"
+            (click)="onReset()"
+            class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Limpiar
+          </button>
+          <button
+            type="submit"
+            [disabled]="registerForm.invalid || loading"
+            class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            @if (loading) {
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            }
+            {{ loading ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
