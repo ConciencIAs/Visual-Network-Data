@@ -33,7 +33,7 @@ jobs:
         
       # IMPORTANTE: Agregar --base-href con el nombre de tu repositorio
       - name: Build Angular Application
-        run: npx ng build --configuration production --base-href "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+        run: npx ng build --configuration production --base-href "/${{ github.event.repository.name }}/"
       
       # Crear archivo .nojekyll para evitar que GitHub Pages procese archivos con _
       - name: Create .nojekyll file
@@ -42,6 +42,16 @@ jobs:
       # Copiar index.html como 404.html para rutas de Angular
       - name: Copy index.html to 404.html
         run: cp dist/leonidas/browser/index.html dist/leonidas/browser/404.html
+      
+      # Agregar headers personalizados para CSP
+      - name: Create _headers file
+        run: |
+          cat > dist/leonidas/browser/_headers << 'EOF'
+          /*
+            X-Frame-Options: SAMEORIGIN
+            X-Content-Type-Options: nosniff
+            X-XSS-Protection: 1; mode=block
+          EOF
         
       - name: Setup Pages
         uses: actions/configure-pages@v5
