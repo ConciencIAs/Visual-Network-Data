@@ -5,12 +5,14 @@ import { GraphClusteringService } from '@app/services/cluster/graph-clustering.s
 import { RegisterData, Node, Link, GraphData } from '@app/models/graph.model';
 import { CommonModule } from '@angular/common';
 
+declare const ForceGraph3D: any;
+
 @Component({
   selector: 'app-graph',
   imports: [CommonModule],
   templateUrl: './graph.html',
   styleUrls: ['./graph.scss'],
-  standalone: true
+  standalone: true,
 })
 export class Graph implements OnInit {
   @ViewChild('graph', { static: true }) graphContainer!: ElementRef;
@@ -18,12 +20,12 @@ export class Graph implements OnInit {
   private rawData: RegisterData[] = [];
   private colorMap: { [key: string]: string } = {};
 
-  public readonly clusterFields: Array<{key: keyof RegisterData, label: string}> = [
+  public readonly clusterFields: Array<{ key: keyof RegisterData; label: string }> = [
     { key: 'country', label: 'País' },
     { key: 'department', label: 'Departamento' },
     { key: 'city', label: 'Ciudad' },
     { key: 'gender', label: 'Género' },
-    { key: 'age', label: 'Edad' }
+    { key: 'age', label: 'Edad' },
   ];
 
   constructor(
@@ -35,7 +37,7 @@ export class Graph implements OnInit {
   private initializeGraph(container: HTMLElement, data: GraphData, ForceGraphCtor: any): any {
     return new ForceGraphCtor(container, {
       controlType: 'orbit',
-      backgroundColor: '#1a1a1a'
+      backgroundColor: '#1a1a1a',
     })
       .graphData(data)
       .nodeAutoColorBy('group')
@@ -78,17 +80,17 @@ export class Graph implements OnInit {
   private async processDataAndUpdateGraph(): Promise<void> {
     console.log('Procesando datos y actualizando gráfico...');
 
-    import('3d-force-graph').then((mod) => {
-      const ForceGraph3D = mod?.default ?? mod;
-      this.graph = this.initializeGraph(this.graphContainer.nativeElement, {
+    this.graph = this.initializeGraph(
+      this.graphContainer.nativeElement,
+      {
         nodes: [],
-        links: []
-      }, ForceGraph3D);
+        links: [],
+      },
+      ForceGraph3D
+    );
 
-      // Clusterizar inicialmente por país
-      this.clusterBy('country');
-
-    }).catch(err => console.error('No se pudo cargar 3d-force-graph:', err));
+    // Clusterizar inicialmente por país
+    this.clusterBy('country');
   }
 
   clusterBy(field: keyof RegisterData) {
@@ -101,7 +103,8 @@ export class Graph implements OnInit {
       'full_name'
     );
 
-    this.graph.graphData(graphData)
+    this.graph
+      .graphData(graphData)
       .nodeColor((node: Node) => this.getNodeColor(node))
       .linkWidth((link: any) => link.value * 2)
       .linkOpacity(0.3)
@@ -129,8 +132,14 @@ export class Graph implements OnInit {
 
     if (!this.colorMap[node.group]) {
       const colors = [
-        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
-        '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB'
+        '#FF6B6B',
+        '#4ECDC4',
+        '#45B7D1',
+        '#96CEB4',
+        '#FFEEAD',
+        '#D4A5A5',
+        '#9B59B6',
+        '#3498DB',
       ];
       this.colorMap[node.group] = colors[Object.keys(this.colorMap).length % colors.length];
     }

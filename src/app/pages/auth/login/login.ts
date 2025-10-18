@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { SupabaseService } from '@services/supabase/supabase.services';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { Toast } from '@app/services/toast/toast';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ export class Login implements OnInit {
 
   constructor(
     private readonly supabase: SupabaseService,
-    private router: Router
+    private router: Router,
+    private toastServices: Toast
   ) {
     // Inicializar el formulario en el constructor
     this.signInForm = new FormGroup({
@@ -28,7 +30,6 @@ export class Login implements OnInit {
   }
 
   async ngOnInit() {
-    // Verificar si ya hay una sesión activa
     const { session } = await this.supabase.getSession();
     if (session) {
       await this.router.navigate(['/form/register']);
@@ -51,19 +52,29 @@ export class Login implements OnInit {
     try {
       this.loading = true;
       const email = this.signInForm.value.email as string;
+
+      const isAuthorized = await this.supabase.isAuthorizedUserByEmail(email);
+
+      if (!isAuthorized) {
+        // success, info, warn and error
+        console.log('Usuario no autorizado:', email);
+        this.toastServices.warn('No estás autorizado para acceder. Por favor, contacta al administrador.', 'Acceso Denegado');
+        return;
+      }
+
       const { error } = await this.supabase.signIn(email);
+      console.log('Error de inicio de sesión:', error);
 
       if (error) throw error;
 
-      // Guardar email en localStorage y marcar que se envió el email
       localStorage.setItem('userEmail', email);
       this.emailSent = true;
 
-      alert('Se ha enviado un enlace de acceso a tu correo electrónico. Por favor, revisa tu bandeja de entrada.');
+      this.toastServices.success('Se ha enviado un enlace de acceso a tu correo electrónico.', 'Correo Enviado');
 
     } catch (error) {
       if (error instanceof Error) {
-        alert('Error al enviar el correo: ' + error.message);
+        this.toastServices.error(`Error al enviar el correo de acceso: ${error.message}`, 'Error de Autenticación');
       }
     } finally {
       this.signInForm.reset();

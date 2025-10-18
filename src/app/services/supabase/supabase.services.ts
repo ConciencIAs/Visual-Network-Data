@@ -95,7 +95,7 @@ export class SupabaseService {
     return this.supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: window.location.origin + '/auth/callback'
+        emailRedirectTo: environment.domain + '/auth/callback'
       }
     });
   }
@@ -146,5 +146,10 @@ export class SupabaseService {
 
   saveRegisterMessages(messages: RegisterMessages) {
     return this.supabase.from('Leonidas').insert(messages)
+  }
+
+  async isAuthorizedUserByEmail(email: string): Promise<boolean> {
+    const { data, error } = await this.supabase.from('authorized_users').select('email').eq('email', email)
+    return !!data && data.length > 0 && !error
   }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '@services/supabase/supabase.services';
+import { Toast } from '@app/services/toast/toast';
+
 
 @Component({
   selector: 'app-auth-callback',
@@ -12,7 +14,8 @@ import { SupabaseService } from '@services/supabase/supabase.services';
 export class AuthCallbackComponent implements OnInit {
   constructor(
     private supabase: SupabaseService,
-    private router: Router
+    private router: Router,
+    private toastServices: Toast
   ) {}
 
   async ngOnInit() {
@@ -24,6 +27,7 @@ export class AuthCallbackComponent implements OnInit {
       const { session, error } = await this.supabase.getSession();
 
       if (error) throw error;
+      this.toastServices.info('Procesando callback de autenticación...', 'Autenticación');
 
       if (session) {
         // La sesión está activa, redirigir al formulario de registro
@@ -33,7 +37,7 @@ export class AuthCallbackComponent implements OnInit {
         await this.router.navigate(['/auth/login']);
       }
     } catch (error) {
-      console.error('Error en el callback de autenticación:', error);
+      this.toastServices.error('Error en el callback de autenticación.', 'Error de Autenticación');
       await this.router.navigate(['/auth/login']);
     }
   }

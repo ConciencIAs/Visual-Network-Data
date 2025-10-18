@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupabaseService } from '@app/services/supabase/supabase.services';
+import { Toast } from '@app/services/toast/toast';
+
 
 @Component({
   selector: 'app-load-register-messages',
@@ -18,7 +20,8 @@ export class LoadRegisterMessages {
   constructor(
     private fb: FormBuilder,
     private supabaseService: SupabaseService,
-    private router: Router
+    private router: Router,
+    private toastServices: Toast
   ) {
     this.registerForm = this.fb.group({
       full_name: ['', [Validators.required, Validators.minLength(3)]],
@@ -40,15 +43,14 @@ export class LoadRegisterMessages {
         if (error) throw error;
 
         // Mostrar mensaje de éxito
-        alert('¡Registro completado exitosamente!');
+        this.toastServices.success('Registro completado exitosamente!');
 
         // Redireccionar al gráfico
         await this.router.navigate(['/graph']);
 
       } catch (error) {
-        console.error('Error al guardar:', error);
+        this.toastServices.error('Error al guardar el registro.');
         this.loading = false;
-        // Mostrar mensaje de error al usuario
         if (error instanceof Error) {
           alert('Error al guardar el registro: ' + error.message);
         } else {
@@ -59,7 +61,7 @@ export class LoadRegisterMessages {
       }
     } else {
       // Mostrar mensaje si el formulario es inválido
-      alert('Por favor, completa todos los campos requeridos correctamente.');
+      this.toastServices.warn('Por favor, completa todos los campos requeridos correctamente.');
     }
   }
 
