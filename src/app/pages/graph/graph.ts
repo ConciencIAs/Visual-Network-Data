@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, WritableSignal, signal } from '@angular/core';
 import { SupabaseService } from '@app/services/supabase/supabase.services';
 import { MockDataService } from '@app/services/mock/mock-data.service';
 import { GraphClusteringService } from '@app/services/cluster/graph-clustering.service';
@@ -19,6 +19,8 @@ export class Graph implements OnInit {
   private graph: any;
   private rawData: RegisterData[] = [];
   private colorMap: { [key: string]: string } = {};
+
+  selectedNode: WritableSignal<RegisterData | undefined> = signal(undefined);
 
   public readonly clusterFields: Array<{ key: keyof RegisterData; label: string }> = [
     { key: 'country', label: 'País' },
@@ -45,12 +47,23 @@ export class Graph implements OnInit {
       .nodeVal((node: Node) => node.value || 1)
       .nodeLabel((n: Node) => this.getNodeLabel(n))
       .linkOpacity(0.4)
+      .nodeResolution(16)
+      .linkDirectionalParticles(6) // Más partículas
+      .linkDirectionalParticleSpeed(0.008)
+      .linkDirectionalParticleWidth(2.5)
+      .enableNodeDrag(true)
+      .enableNavigationControls(true)
+      .showNavInfo(false)
       .linkWidth((link: any) => link.value || 1)
-      .linkDirectionalParticles(4)
-      .linkDirectionalParticleSpeed(0.006)
-      .onNodeClick((node: Node) => this.showDetails(node))
-      .onNodeHover((node: Node) => {
-        container.style.cursor = node ? 'pointer' : 'default';
+      .onNodeRightClick((node: Node) => {
+        // Centrar cámara en el nodo
+        const distance = 200;
+        const distRatio = 1 + distance / Math.hypot(node.fx!, node.fy!, node.fz!);
+        this.graph.cameraPosition(
+          { x: node.fx! * distRatio, y: node.fy! * distRatio, z: node.fz! * distRatio },
+          node,
+          1000
+        );
       });
   }
 
@@ -65,9 +78,6 @@ export class Graph implements OnInit {
       // if (error || !data || data.length === 0) {
       // }
 
-      console.log('Datos cargados:', this.rawData);
-
-      // Procesar los datos y actualizar el gráfico
       await this.processDataAndUpdateGraph();
     } catch (error) {
       console.error('Error al cargar los datos:', error);
@@ -78,8 +88,6 @@ export class Graph implements OnInit {
   }
 
   private async processDataAndUpdateGraph(): Promise<void> {
-    console.log('Procesando datos y actualizando gráfico...');
-
     this.graph = this.initializeGraph(
       this.graphContainer.nativeElement,
       {
@@ -89,7 +97,6 @@ export class Graph implements OnInit {
       ForceGraph3D
     );
 
-    // Clusterizar inicialmente por país
     this.clusterBy('country');
   }
 
@@ -108,19 +115,25 @@ export class Graph implements OnInit {
       .nodeColor((node: Node) => this.getNodeColor(node))
       .linkWidth((link: any) => link.value * 2)
       .linkOpacity(0.3)
-      .nodeLabel((node: Node) => this.getNodeLabel(node));
+      .nodeLabel((node: Node) => this.getNodeLabel(node))
+      .onNodeClick((node: Node) => this.showDetails(node))
+      .onNodeHover((node: Node) => {
+        if (node) {
+          this.graph.nodeRelSize(8);
+        }
+      })
   }
 
   private showDetails(node: Node): void {
-    if (!node.data) return;
-    console.log('Detalles del nodo:', node.data);
+    this.selectedNode.set(node.data);
+  }
 
-    if (node.__threeObj && node.__baseColor) {
-      node.__threeObj.material.color.set('#ff4444');
-      setTimeout(() => {
-        node.__threeObj.material.color.set(node.__baseColor);
-      }, 800);
-    }
+  closeDetails() {
+    this.selectedNode.set(undefined);
+  }
+
+  get isSelectedNode(): boolean {
+    return this.selectedNode() !== undefined;
   }
 
   private getNodeColor(node: Node): string {
@@ -153,20 +166,9 @@ export class Graph implements OnInit {
     }
 
     return `
-      <div style="
-        background: rgba(0,0,0,0.8);
-        padding: 10px;
-        border-radius: 4px;
-        color: white;
-        font-family: Arial;
-        max-width: 200px;
-      ">
-        <strong>${node.data.full_name}</strong><br/>
-        Ciudad: ${node.data.city}<br/>
-        Departamento: ${node.data.department}<br/>
-        País: ${node.data.country}<br/>
-        Edad: ${node.data.age}<br/>
-        Género: ${node.data.gender}
+      <div style="background: rgba(0,0,0,0.9); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="color: white; font-weight: bold; margin-bottom: 4px;">${node.name}</div>
+        <div style="color: rgba(255,255,255,0.7); font-size: 12px;">${node.data.age} años • ${node.data.gender}</div>
       </div>
     `;
   }

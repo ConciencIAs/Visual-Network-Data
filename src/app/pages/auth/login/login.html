@@ -1,48 +1,175 @@
-<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-  <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-    <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-    <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-      <div class="max-w-md mx-auto">
-        <div class="divide-y divide-gray-200">
-          <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500 mb-2">
-              Supabase + Angular
-            </h1>
-            <p class="text-gray-600 mb-8">
-              Sign in via magic link with your email below
-            </p>
-            <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="space-y-6">
-              <div class="space-y-2">
-                <label for="email" class="text-sm font-medium text-gray-700 block">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  formControlName="email"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                  type="email"
-                  placeholder="tu@email.com"
-                />
+    <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
+      <div class="w-full max-w-md">
+
+        <!-- Tarjeta principal -->
+        <div class="relative">
+          <!-- Fondo decorativo con glassmorphism -->
+          <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 shadow-2xl transform rotate-3 rounded-3xl opacity-20 blur-sm"></div>
+
+          <!-- Contenido -->
+          <div class="relative bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden border border-gray-100">
+
+            <!-- Header con gradiente -->
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-10 text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4 backdrop-blur-sm">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
               </div>
-              <div class="pt-4">
-                <button
-                  type="submit"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-colors duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                  [disabled]="loading"
-                >
-                @if (loading) {
-                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                }
-                  {{ loading ? "Enviando..." : "Enviar magic link" }}
-                </button>
+              <h1 class="text-3xl font-extrabold text-white mb-2">
+                Iniciar Sesión
+              </h1>
+              <p class="text-indigo-100 text-sm">
+                Te enviaremos un enlace mágico a tu email
+              </p>
+            </div>
+
+            <!-- Formulario -->
+            <div class="px-8 py-10">
+              @if (emailSent) {
+                <!-- Mensaje de éxito -->
+                <div class="text-center space-y-6 animate-fade-in">
+                  <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full">
+                    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                      ¡Revisa tu email!
+                    </h3>
+                    <p class="text-gray-600 mb-1">
+                      Hemos enviado un enlace mágico a:
+                    </p>
+                    <p class="text-indigo-600 font-semibold mb-4">
+                      {{ signInForm.get('email')?.value }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      Haz clic en el enlace para iniciar sesión
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="resetForm()"
+                    class="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                  >
+                    ← Volver al formulario
+                  </button>
+                </div>
+              } @else {
+                <!-- Formulario de login -->
+                <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+                  <!-- Campo de email -->
+                  <div class="space-y-2">
+                    <label for="email" class="block text-sm font-semibold text-gray-700">
+                      Correo Electrónico
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                        </svg>
+                      </div>
+                      <input
+                        id="email"
+                        type="email"
+                        formControlName="email"
+                        class="pl-11 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200 py-3.5 text-gray-900 placeholder-gray-400"
+                        placeholder="tu@email.com"
+                        [class.border-red-300]="signInForm.get('email')?.invalid && signInForm.get('email')?.touched"
+                      />
+                    </div>
+                    @if (signInForm.get('email')?.invalid && signInForm.get('email')?.touched) {
+                      <p class="mt-2 text-sm text-red-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        @if (signInForm.get('email')?.errors?.['required']) {
+                          El email es requerido
+                        }
+                        @if (signInForm.get('email')?.errors?.['email']) {
+                          Ingresa un email válido
+                        }
+                      </p>
+                    }
+                  </div>
+
+                  <!-- Botón de envío -->
+                  <div class="pt-2">
+                    <button
+                      type="submit"
+                      [disabled]="signInForm.invalid || loading"
+                      class="w-full inline-flex items-center justify-center rounded-xl border border-transparent bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 text-base font-bold text-white shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                    >
+                      @if (loading) {
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Enviando...
+                      } @else {
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        Enviar Magic Link
+                      }
+                    </button>
+                  </div>
+
+                  <!-- Divider -->
+                  <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                      <div class="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                      <span class="px-4 bg-white text-gray-500">o</span>
+                    </div>
+                  </div>
+
+                  <!-- Información adicional -->
+                  <div class="text-center space-y-3">
+                    <p class="text-sm text-gray-600">
+                      ¿No tienes cuenta?
+                    </p>
+                    <p class="text-sm text-gray-600">
+                      El magic link creará una automáticamente
+                    </p>
+                    <a href="/" class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 no-underline">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                      </svg>
+                      Volver al inicio
+                    </a>
+                  </div>
+                </form>
+              }
+            </div>
+
+            <!-- Footer con info de seguridad -->
+            <div class="px-8 py-6 bg-gray-50 border-t border-gray-100">
+              <div class="flex items-center justify-center space-x-2 text-xs text-gray-500">
+                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>Autenticación segura con Supabase</span>
               </div>
-            </form>
+            </div>
           </div>
+        </div>
+
+        <!-- Características del magic link -->
+        <div class="mt-8 grid grid-cols-3 gap-4">
+          @for (benefit of benefits; track benefit.title) {
+            <div class="text-center">
+              <div class="inline-flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md mb-2">
+                <svg class="w-5 h-5" [ngClass]="benefit.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="benefit.iconPath"/>
+                </svg>
+              </div>
+              <p class="text-xs font-medium text-gray-700">{{ benefit.title }}</p>
+            </div>
+          }
         </div>
       </div>
     </div>
-  </div>
-</div>
