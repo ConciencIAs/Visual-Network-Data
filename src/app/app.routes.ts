@@ -5,11 +5,11 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./pages/home/home').then(m => m.Home),
-    canActivate: [AuthGuard]
   },
   {
     path: 'graph',
     loadComponent: () => import('./pages/graph/graph').then(m => m.Graph),
+    canActivate: [AuthGuard]
   },
   {
     path: 'auth',
