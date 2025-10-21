@@ -31,14 +31,14 @@ export class AuthCallbackComponent implements OnInit {
 
       if (session) {
         // La sesión está activa, redirigir al formulario de registro
-        await this.router.navigate(['/form/register']);
+        await this.router.navigate(['form/register']);
       } else {
         // No hay sesión, redirigir al login
-        await this.router.navigate(['/auth/login']);
+        await this.router.navigate(['auth/login']);
       }
     } catch (error) {
       this.toastServices.error('Error en el callback de autenticación.', 'Error de Autenticación');
-      await this.router.navigate(['/auth/login']);
+      await this.router.navigate(['auth/login']);
     }
   }
 }

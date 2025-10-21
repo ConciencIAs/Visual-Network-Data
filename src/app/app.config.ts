@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, CSP_NONCE } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -12,10 +12,6 @@ import Nora from '@primeuix/themes/nora';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    {
-      provide: CSP_NONCE,
-      useValue: (globalThis as any).myRandomNonceValue ?? ''
-    },
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),

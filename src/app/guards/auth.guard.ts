@@ -28,6 +28,6 @@ export class AuthGuard implements CanActivate {
     }
 
     // Si no hay email o hay error, redirigimos al login
-    return this.router.createUrlTree(['/auth/login']);
+    return this.router.createUrlTree(['auth/login']);
   }
 }

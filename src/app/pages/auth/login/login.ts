@@ -52,14 +52,14 @@ export class Login implements OnInit {
   async ngOnInit() {
     const { session } = await this.supabase.getSession();
     if (session) {
-      await this.router.navigate(['/form/register']);
+      await this.router.navigate(['form/register']);
       return;
     }
 
     // Escuchar cambios en el estado de autenticación
     this.supabase.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
       if (event === 'SIGNED_IN' && session) {
-        await this.router.navigate(['/form/register']);
+        await this.router.navigate(['form/register']);
       }
     });
   }

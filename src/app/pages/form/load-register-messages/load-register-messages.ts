@@ -46,7 +46,7 @@ export class LoadRegisterMessages {
         this.toastServices.success('Registro completado exitosamente!');
 
         // Redireccionar al gráfico
-        await this.router.navigate(['/graph']);
+        await this.router.navigate(['graph']);
 
       } catch (error) {
         this.toastServices.error('Error al guardar el registro.');
