@@ -33,7 +33,7 @@ jobs:
         
       # IMPORTANTE: Agregar --base-href con el nombre de tu repositorio
       - name: Build Angular Application
-        run: npx ng build --configuration production --base-href "/${{ github.event.repository.name }}/"
+        run: npx ng build --configuration production --base-href="/${{ github.event.repository.name }}/" --deploy-url="/${{ github.event.repository.name }}/" 
       
       # Crear archivo .nojekyll para evitar que GitHub Pages procese archivos con _
       - name: Create .nojekyll file
