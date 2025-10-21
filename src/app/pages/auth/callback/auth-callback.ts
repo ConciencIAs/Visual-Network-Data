@@ -25,6 +25,7 @@ export class AuthCallbackComponent implements OnInit {
   private async handleAuthCallback() {
     try {
       const { session, error } = await this.supabase.getSession();
+      localStorage.setItem('userEmail', session?.user.email || '');
 
       if (error) throw error;
       this.toastServices.info('Procesando callback de autenticación...', 'Autenticación');
