@@ -9,7 +9,7 @@ export const routes: Routes = [
   {
     path: 'graph',
     loadComponent: () => import('./pages/graph/graph').then(m => m.Graph),
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'auth',
@@ -30,7 +30,7 @@ export const routes: Routes = [
       {
         path: 'register',
         loadComponent: () => import('./pages/form/load-register-messages/load-register-messages').then(m => m.LoadRegisterMessages),
-        canActivate: [AuthGuard]
+        // canActivate: [AuthGuard]
       }
     ]
   },
