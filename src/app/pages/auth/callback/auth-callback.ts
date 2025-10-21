@@ -25,6 +25,7 @@ export class AuthCallbackComponent implements OnInit {
   private async handleAuthCallback() {
     try {
       const { session, error } = await this.supabase.getSession();
+      console.log('Auth Callback Session:', session);
       localStorage.setItem('userEmail', session?.user.email || '');
 
       if (error) throw error;
