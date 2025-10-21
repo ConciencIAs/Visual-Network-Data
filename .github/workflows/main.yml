@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    environment: banana-hosting
     runs-on: ubuntu-latest
     steps:
       - name: Ejecutar comandos remotos
@@ -16,9 +17,9 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         uses: appleboy/ssh-action@v1.2.2
         with:
-          username: ${{ env.SSH_USERNAME }}
-          host: ${{ env.SSH_HOST }}
-          key: ${{ env.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: | # Comandos a ejecutar en el servidor
             cd /var/www/html
