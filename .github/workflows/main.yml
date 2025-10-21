@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ejecutar comandos remotos
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.2
         with:
           username: ${{ secrets.SSH_USERNAME }}
           host: ${{ secrets.SSH_HOST }}
