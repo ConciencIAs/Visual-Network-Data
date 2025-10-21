@@ -10,21 +10,12 @@ jobs:
     environment: banana-hosting
     runs-on: ubuntu-latest
     steps:
-      - name: Ejecutar comandos remotos
-        env:
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: appleboy/ssh-action@v1.2.2
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          username: ${{ secrets.SSH_USERNAME }}
-          host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: | # Comandos a ejecutar en el servidor
-            cd /var/www/html
-            ls -al # Ejemplo: Listar archivos
-          # exclude: ".git,.github,node_modules" 
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
 
       - name: Despliegue completado
         run: echo "Archivos subidos exitosamente al servidor."
