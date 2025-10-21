@@ -9,21 +9,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: VALIDACIÓN DE SECRETS (Temporal)
-        run: |
-          echo "Host (parcialmente, censurado por seguridad): ${{ secrets.SSH_HOST }}"
-          echo "Usuario (visible): ${{ secrets.SSH_USERNAME }}"
-          if [ -z "${{ secrets.SSH_HOST }}" ] || [ -z "${{ secrets.SSH_USERNAME }}" ]; then
-            echo "¡ERROR CRÍTICO! Uno o más secrets (HOST/USERNAME) están vacíos."
-            exit 1
-          fi
-          echo "Validación de Secrets: OK. Los valores base están presentes."
       - name: Ejecutar comandos remotos
+        env:
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         uses: appleboy/ssh-action@v1.2.2
         with:
-          username: ${{ secrets.SSH_USERNAME }}
-          host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ env.SSH_USERNAME }}
+          host: ${{ env.SSH_HOST }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
           port: 22
           script: | # Comandos a ejecutar en el servidor
             cd /var/www/html
