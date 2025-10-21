@@ -1,0 +1,21 @@
+name: Despliegue con SSH/SCP
+
+on:
+  push:
+    branches:
+      - main # Ejecutar cuando se haga push a la rama 'main'
+
+jobs:
+  deploy:
+    environment: banana-hosting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+
+      - name: Despliegue completado
+        run: echo "Archivos subidos exitosamente al servidor."
