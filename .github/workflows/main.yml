@@ -1,0 +1,25 @@
+name: Despliegue con SSH/SCP
+
+on:
+  push:
+    branches:
+      - main # Ejecutar cuando se haga push a la rama 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ejecutar comandos remotos
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: | # Comandos a ejecutar en el servidor
+            cd /var/www/html
+            ls -al # Ejemplo: Listar archivos
+          # exclude: ".git,.github,node_modules" 
+
+      - name: Despliegue completado
+        run: echo "Archivos subidos exitosamente al servidor."
